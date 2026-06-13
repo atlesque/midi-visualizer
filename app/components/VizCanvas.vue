@@ -8,10 +8,7 @@
     @dragover.prevent="onDragOver"
     @drop.prevent="onDrop"
   >
-    <canvas
-      ref="canvasRef"
-      class="viz-canvas"
-    />
+    <canvas ref="canvasRef" class="viz-canvas" />
 
     <!-- Empty state drop zone -->
     <div v-if="!hasFiles" class="viz-canvas__empty">
@@ -19,7 +16,11 @@
     </div>
 
     <!-- Drag overlay when files already loaded -->
-    <div v-if="hasFiles" class="viz-canvas__drag-overlay" :class="{ 'viz-canvas__drag-overlay--visible': isDraggingOver }">
+    <div
+      v-if="hasFiles"
+      class="viz-canvas__drag-overlay"
+      :class="{ 'viz-canvas__drag-overlay--visible': isDraggingOver }"
+    >
       <div class="viz-canvas__drag-content">
         <UIcon name="i-lucide-upload" class="size-9" />
         <span>Drop MIDI files to add</span>
@@ -29,78 +30,83 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
-import type { MidiFileEntry } from '~/composables/domain/types';
-import { useVisualization } from '~/composables/useVisualization';
+import { onMounted, onUnmounted, ref, watch } from "vue";
+import type { MidiFileEntry } from "~/composables/domain/types";
+import { useVisualization } from "~/composables/useVisualization";
 
 const props = defineProps<{
-  files: MidiFileEntry[]
-  hasFiles: boolean
-  timeRange?: number
-}>()
+  files: MidiFileEntry[];
+  hasFiles: boolean;
+  timeRange?: number;
+}>();
 
 const emit = defineEmits<{
-  files: [files: File[]]
-}>()
+  files: [files: File[]];
+}>();
 
-const containerRef = ref<HTMLDivElement | null>(null)
-const { canvasRef, timeRange: vizTimeRange, render } = useVisualization()
-const isDraggingOver = ref(false)
-let resizeObserver: ResizeObserver | null = null
-let dragCounter = 0
+const containerRef = ref<HTMLDivElement | null>(null);
+const { canvasRef, timeRange: vizTimeRange, render } = useVisualization();
+const isDraggingOver = ref(false);
+let resizeObserver: ResizeObserver | null = null;
+let dragCounter = 0;
 
-// Sync external timeRange prop into visualization composable
-watch(() => props.timeRange, (val) => {
-  if (val !== undefined) {
-    vizTimeRange.value = val
-  }
-}, { immediate: true })
+// Sync external timeRange prop into visualization composable and re-render
+watch(
+  () => props.timeRange,
+  (val) => {
+    if (val !== undefined) {
+      vizTimeRange.value = val;
+    }
+    scheduleRender();
+  },
+  { immediate: true },
+);
 
 function onDragEnter() {
-  dragCounter++
-  isDraggingOver.value = true
+  dragCounter++;
+  isDraggingOver.value = true;
 }
 
 function onDragOver() {
-  isDraggingOver.value = true
+  isDraggingOver.value = true;
 }
 
 function onDragLeave() {
-  dragCounter--
+  dragCounter--;
   if (dragCounter <= 0) {
-    dragCounter = 0
-    isDraggingOver.value = false
+    dragCounter = 0;
+    isDraggingOver.value = false;
   }
 }
 
 function onDrop(e: DragEvent) {
-  dragCounter = 0
-  isDraggingOver.value = false
-  const files = e.dataTransfer?.files
+  dragCounter = 0;
+  isDraggingOver.value = false;
+  const files = e.dataTransfer?.files;
   if (files && files.length > 0) {
-    emit('files', Array.from(files))
+    emit("files", Array.from(files));
   }
 }
 
 function scheduleRender() {
   if (props.hasFiles) {
-    requestAnimationFrame(() => render(props.files))
+    requestAnimationFrame(() => render(props.files));
   }
 }
 
-watch(() => props.files, scheduleRender, { deep: true })
+watch(() => props.files, scheduleRender, { deep: true });
 
 onMounted(() => {
   if (containerRef.value) {
-    resizeObserver = new ResizeObserver(() => scheduleRender())
-    resizeObserver.observe(containerRef.value)
+    resizeObserver = new ResizeObserver(() => scheduleRender());
+    resizeObserver.observe(containerRef.value);
   }
-  scheduleRender()
-})
+  scheduleRender();
+});
 
 onUnmounted(() => {
-  resizeObserver?.disconnect()
-})
+  resizeObserver?.disconnect();
+});
 </script>
 
 <style scoped>
