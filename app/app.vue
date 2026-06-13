@@ -40,10 +40,7 @@
             @files="handleFiles"
           />
           <PlaybackBar
-            :is-playing="isPlaying"
             :time-range="timeRange"
-            :scroll-offset="scrollOffset"
-            @toggle-play="togglePlay"
             @update:time-range="timeRange = $event"
           />
         </div>
@@ -64,7 +61,6 @@ import { useMidiFiles } from "~/composables/useMidiFiles";
 import { toneMidiParser } from "~/utils/midi";
 
 const midiFiles = useMidiFiles(toneMidiParser);
-const isPlaying = ref(false);
 const timeRange = ref(30);
 const scrollOffset = ref(0);
 const hasFiles = ref(false);
@@ -102,10 +98,6 @@ function autoZoomToFit() {
     timeRange.value = Math.ceil(maxDuration);
     scrollOffset.value = 0;
   }
-}
-
-function togglePlay() {
-  isPlaying.value = !isPlaying.value;
 }
 </script>
 
