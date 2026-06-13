@@ -11,6 +11,11 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: [
+        'tone',
+      ],
+    },
   },
 
   typescript: {
