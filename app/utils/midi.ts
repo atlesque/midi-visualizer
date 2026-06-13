@@ -3,8 +3,8 @@
  * Adapts Tone's Midi class into our domain model.
  */
 import * as Tone from 'tone'
-import type { MidiData, Track, Note, MidiMeta } from '~/composables/domain/types'
 import type { MidiParserPort } from '~/composables/domain/midi-parser'
+import type { MidiData, MidiMeta, Note, Track } from '~/composables/domain/types'
 
 /** Convert MIDI note number to name (e.g. 60 → "C4") */
 function noteNumberToName(note: number): string {
@@ -15,7 +15,8 @@ function noteNumberToName(note: number): string {
 
 export const toneMidiParser: MidiParserPort = {
   async parse(_fileName: string, arrayBuffer: ArrayBuffer): Promise<MidiData> {
-    const midi = await Tone.Midi.fromUrl(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const midi = await (Tone.Midi as any).fromUrl(
       URL.createObjectURL(new Blob([arrayBuffer], { type: 'audio/midi' })),
     )
 
@@ -26,8 +27,8 @@ export const toneMidiParser: MidiParserPort = {
     // Compute total duration from all tracks
     let maxTime = 0
 
-    const tracks: Track[] = midi.tracks.map((track, index) => {
-      const notes: Note[] = track.notes.map(n => {
+    const tracks: Track[] = midi.tracks.map((track: any, index: number) => {
+      const notes: Note[] = track.notes.map((n: any) => {
         const end = n.time + n.duration
         if (end > maxTime) maxTime = end
         return {

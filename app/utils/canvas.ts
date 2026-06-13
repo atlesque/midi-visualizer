@@ -1,7 +1,7 @@
 /**
  * Infrastructure: Canvas drawing primitives for MIDI visualization.
  */
-import type { Track, Note, MidiMeta } from '~/composables/domain/types'
+import type { MidiMeta, Track } from '~/composables/domain/types'
 
 export interface DrawConfig {
   /** Canvas width in CSS pixels */
@@ -48,8 +48,9 @@ export function drawMidiVisualization(
   // Draw each track
   tracks.forEach((track, i) => {
     const y = i * trackHeight + 20
-    drawTrackHeader(ctx, track, y, trackHeight, colors[i % colors.length], width)
-    drawTrackNotes(ctx, track, y, trackHeight, timeRange, scrollOffset, colors[i % colors.length])
+    const color = colors[i % colors.length]!
+    drawTrackHeader(ctx, track, y, trackHeight, color, width)
+    drawTrackNotes(ctx, track, y, trackHeight, timeRange, scrollOffset, color)
   })
 
   // Time cursor
