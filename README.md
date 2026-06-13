@@ -77,7 +77,7 @@ pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:8510](http://localhost:8510).
 
 ### Build
 
