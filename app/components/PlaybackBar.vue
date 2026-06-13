@@ -1,19 +1,14 @@
 <template>
   <div class="playback-bar">
     <div class="playback-bar__controls">
-      <button
-        class="playback-bar__btn"
-        :title="isPlaying ? 'Pause' : 'Play'"
+      <UButton
+        :icon="isPlaying ? 'i-lucide-pause' : 'i-lucide-play'"
+        :color="isPlaying ? 'neutral' : 'primary'"
+        variant="solid"
+        size="sm"
+        square
         @click="$emit('togglePlay')"
-      >
-        <svg v-if="isPlaying" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <rect x="6" y="4" width="4" height="16" />
-          <rect x="14" y="4" width="4" height="16" />
-        </svg>
-        <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="5,3 19,12 5,21" />
-        </svg>
-      </button>
+      />
     </div>
 
     <div class="playback-bar__time">
@@ -22,13 +17,13 @@
 
     <div class="playback-bar__zoom">
       <span class="playback-bar__zoom-label">{{ timeRange }}s</span>
-      <input
-        type="range"
-        min="5"
-        max="120"
-        :value="timeRange"
+      <USlider
+        :model-value="timeRange"
+        :min="5"
+        :max="120"
+        size="sm"
         class="playback-bar__slider"
-        @input="$emit('update:timeRange', Number(($event.target as HTMLInputElement).value))"
+        @update:model-value="$emit('update:timeRange', $event as number)"
       />
     </div>
   </div>
@@ -69,24 +64,6 @@ function formatTime(seconds: number): string {
   gap: 4px;
 }
 
-.playback-bar__btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 6px;
-  background: var(--color-accent);
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.15s;
-}
-
-.playback-bar__btn:hover {
-  background: var(--color-accent-soft);
-}
-
 .playback-bar__time {
   min-width: 40px;
 }
@@ -111,8 +88,6 @@ function formatTime(seconds: number): string {
 }
 
 .playback-bar__slider {
-  width: 80px;
-  accent-color: var(--color-accent);
-  cursor: pointer;
+  width: 100px;
 }
 </style>

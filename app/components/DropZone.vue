@@ -15,11 +15,7 @@
     <!-- Empty state -->
     <div v-if="!hasFiles" class="drop-zone__empty">
       <div class="drop-zone__icon" :class="{ 'drop-zone__icon--hover': isDraggingOver }">
-        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-          <polyline points="17 8 12 3 7 8" />
-          <line x1="12" y1="3" x2="12" y2="15" />
-        </svg>
+        <UIcon name="i-lucide-upload" class="size-14" />
       </div>
       <h2 class="drop-zone__title">Drop MIDI files here</h2>
       <p class="drop-zone__hint">Drag & drop your files onto this area, or click anywhere to browse</p>
@@ -29,11 +25,7 @@
     <!-- Compact bar when files already loaded -->
     <div v-else class="drop-zone__bar" :class="{ 'drop-zone__bar--drag-over': isDraggingOver }">
       <div class="drop-zone__bar-content">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-          <polyline points="17 8 12 3 7 8" />
-          <line x1="12" y1="3" x2="12" y2="15" />
-        </svg>
+        <UIcon name="i-lucide-upload" class="size-[18px]" />
         <span>Drop MIDI files here or <strong>click to browse</strong></span>
       </div>
     </div>

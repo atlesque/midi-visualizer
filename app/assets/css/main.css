@@ -8,6 +8,11 @@
   --color-accent-soft: #a29bfe;
 }
 
+/* Force dark mode for the entire app */
+:root {
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

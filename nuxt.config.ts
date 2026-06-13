@@ -1,9 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import tailwindcss from '@tailwindcss/vite'
-
 export default defineNuxtConfig({
   compatibilityDate: '2025-06-13',
   devtools: { enabled: true },
+
+  modules: ['@nuxt/ui'],
+
+  colorMode: {
+    preference: 'dark',
+  },
 
   css: ['~/assets/css/main.css'],
 
@@ -12,7 +16,6 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()],
     optimizeDeps: {
       include: [
         'tone',

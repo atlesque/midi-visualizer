@@ -1,41 +1,43 @@
 <template>
-  <div class="app-layout">
-    <template v-if="hasFiles">
-      <FileSidebar
-        :files="midiFiles.files.value"
-        :selected-index="midiFiles.selectedIndex.value"
-        @select="midiFiles.selectFile"
-        @remove="midiFiles.removeFile"
-        @toggle="midiFiles.toggleVisibility"
-        @clear="midiFiles.clearAll"
+  <UApp>
+    <div class="app-layout">
+      <template v-if="hasFiles">
+        <FileSidebar
+          :files="midiFiles.files.value"
+          :selected-index="midiFiles.selectedIndex.value"
+          @select="midiFiles.selectFile"
+          @remove="midiFiles.removeFile"
+          @toggle="midiFiles.toggleVisibility"
+          @clear="midiFiles.clearAll"
+        />
+        <div class="app-layout__main">
+          <DropZone
+            :has-files="true"
+            class="app-layout__drop-bar"
+            @files="handleFiles"
+          />
+          <VizCanvas
+            :files="midiFiles.visibleFiles.value"
+            :has-files="true"
+            @files="handleFiles"
+          />
+          <PlaybackBar
+            :is-playing="isPlaying"
+            :time-range="timeRange"
+            :scroll-offset="scrollOffset"
+            @toggle-play="togglePlay"
+            @update:time-range="timeRange = $event"
+          />
+        </div>
+      </template>
+      <DropZone
+        v-else
+        :has-files="false"
+        class="app-layout__empty"
+        @files="handleFiles"
       />
-      <div class="app-layout__main">
-        <DropZone
-          :has-files="true"
-          class="app-layout__drop-bar"
-          @files="handleFiles"
-        />
-        <VizCanvas
-          :files="midiFiles.visibleFiles.value"
-          :has-files="true"
-          @files="handleFiles"
-        />
-        <PlaybackBar
-          :is-playing="isPlaying"
-          :time-range="timeRange"
-          :scroll-offset="scrollOffset"
-          @toggle-play="togglePlay"
-          @update:time-range="timeRange = $event"
-        />
-      </div>
-    </template>
-    <DropZone
-      v-else
-      :has-files="false"
-      class="app-layout__empty"
-      @files="handleFiles"
-    />
-  </div>
+    </div>
+  </UApp>
 </template>
 
 <script setup lang="ts">

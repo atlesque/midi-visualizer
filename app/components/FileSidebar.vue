@@ -2,13 +2,15 @@
   <aside class="sidebar">
     <div class="sidebar__header">
       <h3 class="sidebar__title">Files</h3>
-      <button
+      <UButton
         v-if="files.length > 0"
-        class="sidebar__clear"
+        variant="ghost"
+        size="xs"
+        color="error"
         @click="$emit('clear')"
       >
         Clear all
-      </button>
+      </UButton>
     </div>
 
     <TransitionGroup name="file-list" tag="ul" class="sidebar__list">
@@ -26,28 +28,27 @@
           </span>
         </div>
         <div class="sidebar__item-actions">
-          <button
-            class="sidebar__vis-toggle"
-            :class="{ 'sidebar__vis-toggle--off': !file.visible }"
-            :title="file.visible ? 'Hide' : 'Show'"
-            @click.stop="$emit('toggle', index)"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path v-if="file.visible" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle v-if="file.visible" cx="12" cy="12" r="3" />
-              <path v-else d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
-            </svg>
-          </button>
-          <button
-            class="sidebar__remove"
-            title="Remove"
-            @click.stop="$emit('remove', index)"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
+          <UTooltip :text="file.visible ? 'Hide' : 'Show'">
+            <UButton
+              icon="i-lucide-eye"
+              :variant="file.visible ? 'ghost' : 'soft'"
+              size="xs"
+              :color="file.visible ? 'neutral' : 'neutral'"
+              class="sidebar__action-btn"
+              :class="{ 'sidebar__action-btn--off': !file.visible }"
+              @click.stop="$emit('toggle', index)"
+            />
+          </UTooltip>
+          <UTooltip text="Remove">
+            <UButton
+              icon="i-lucide-x"
+              variant="ghost"
+              size="xs"
+              color="neutral"
+              class="sidebar__action-btn sidebar__action-btn--danger"
+              @click.stop="$emit('remove', index)"
+            />
+          </UTooltip>
         </div>
       </li>
     </TransitionGroup>
@@ -59,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MidiFileEntry } from '~/composables/domain/types'
+import type { MidiFileEntry } from '~/composables/domain/types';
 
 defineProps<{
   files: MidiFileEntry[]
@@ -105,19 +106,6 @@ function formatDuration(seconds: number): string {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: rgba(255, 255, 255, 0.5);
-}
-
-.sidebar__clear {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.3);
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 0.15s;
-}
-
-.sidebar__clear:hover {
-  color: #e17055;
 }
 
 .sidebar__list {
@@ -172,27 +160,15 @@ function formatDuration(seconds: number): string {
   flex-shrink: 0;
 }
 
-.sidebar__vis-toggle,
-.sidebar__remove {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.3);
-  transition: color 0.15s, background-color 0.15s;
+.sidebar__action-btn {
+  padding: 2px;
 }
 
-.sidebar__vis-toggle:hover {
-  color: var(--color-accent-soft);
-  background: rgba(108, 92, 231, 0.1);
+.sidebar__action-btn--off {
+  opacity: 0.3;
 }
 
-.sidebar__vis-toggle--off {
-  color: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar__remove:hover {
+.sidebar__action-btn--danger:hover {
   color: #e17055;
   background: rgba(225, 112, 85, 0.1);
 }

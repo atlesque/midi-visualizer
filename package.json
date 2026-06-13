@@ -12,6 +12,8 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@nuxt/ui": "^4.8.2",
+    "@tonejs/midi": "^2.0.28",
     "@vueuse/core": "^14.3.0",
     "nuxt": "^4.4.8",
     "tone": "^15.5.13",
