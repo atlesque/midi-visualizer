@@ -6,7 +6,7 @@
  *   Y-axis = pitch (MIDI note number, high notes at top)
  *   Left gutter = piano keyboard labels
  */
-import type { MidiMeta, Note, Track } from '~/composables/domain/types'
+import type { MidiFileEntry, MidiMeta, Note, Track } from '~/composables/domain/types'
 
 export interface PianoRollConfig {
   /** Canvas width in CSS pixels */
@@ -25,6 +25,8 @@ export interface PianoRollConfig {
   pitchMin: number
   /** Highest MIDI pitch to display (inclusive) */
   pitchMax: number
+  /** File name whose notes should be highlighted with an outline */
+  highlightedFileName?: string | null
 }
 
 /** Standard piano key layout: which MIDI notes are white vs black */
@@ -57,7 +59,7 @@ const DEFAULT_TRACK_COLORS = [
 /** Draw the full piano roll frame */
 export function drawPianoRoll(
   ctx: CanvasRenderingContext2D,
-  tracks: Track[],
+  files: MidiFileEntry[],
   meta: MidiMeta,
   config: PianoRollConfig,
 ) {
@@ -66,6 +68,7 @@ export function drawPianoRoll(
   const pitchMin = config.pitchMin
   const pitchMax = config.pitchMax
   const pitchSpan = pitchMax - pitchMin + 1
+  const highlightedFileName = config.highlightedFileName ?? null
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
   ctx.clearRect(0, 0, width, height)
@@ -82,11 +85,19 @@ export function drawPianoRoll(
   // --- 3. Draw horizontal pitch rows ---
   drawPitchRows(ctx, pitchMin, pitchMax, pitchSpan, rowHeight, noteAreaWidth, PIANO_GUTTER_WIDTH)
 
-  // --- 4. Draw notes from all tracks ---
-  for (let ti = 0; ti < tracks.length; ti++) {
-    const track = tracks[ti]!
-    const color = colors[ti % colors.length]!
-    drawPianoRollNotes(ctx, track.notes, pitchMin, pitchMax, pitchSpan, rowHeight, noteAreaWidth, timeRange, scrollOffset, color, PIANO_GUTTER_WIDTH)
+  // --- 4. Draw notes from all tracks, highlighting selected file ---
+  let globalTrackIndex = 0
+  for (const file of files) {
+    const isHighlighted = highlightedFileName !== null && file.name === highlightedFileName
+    for (const track of file.data.tracks) {
+      const color = colors[globalTrackIndex % colors.length]!
+      drawPianoRollNotes(
+        ctx, track.notes, pitchMin, pitchMax, pitchSpan, rowHeight,
+        noteAreaWidth, timeRange, scrollOffset, color, PIANO_GUTTER_WIDTH,
+        isHighlighted,
+      )
+      globalTrackIndex++
+    }
   }
 
   // --- 5. Vertical divider ---
@@ -202,7 +213,7 @@ function drawPitchRows(
   }
 }
 
-/** Draw notes from a single track as filled rectangles */
+/** Draw notes from a single track as filled rectangles, with optional highlight outline */
 function drawPianoRollNotes(
   ctx: CanvasRenderingContext2D,
   notes: Note[],
@@ -215,6 +226,7 @@ function drawPianoRollNotes(
   scrollOffset: number,
   color: string,
   gutterWidth: number,
+  isHighlighted = false,
 ) {
   ctx.fillStyle = color
 
@@ -237,6 +249,15 @@ function drawPianoRollNotes(
       const r = Math.min(3, noteH / 2)
       roundRect(ctx, x, y + 1, w, noteH - 2, r)
       ctx.fill()
+
+      // Subtle outline for highlighted notes
+      if (isHighlighted) {
+        ctx.globalAlpha = 0.55
+        ctx.strokeStyle = '#ffffff'
+        ctx.lineWidth = 1.2
+        roundRect(ctx, x - 0.5, y + 0.5, w + 1, noteH - 1, r)
+        ctx.stroke()
+      }
     }
   }
 

@@ -47,6 +47,7 @@ const props = defineProps<{
   hasFiles: boolean
   timeRange?: number
   scrollOffset?: number
+  selectedFileName?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -127,9 +128,10 @@ function render() {
     trackColors: TRACK_COLORS,
     pitchMin: pitchRange.min,
     pitchMax: pitchRange.max,
+    highlightedFileName: props.selectedFileName ?? null,
   }
 
-  drawPianoRoll(ctx, allTracks, meta, config)
+  drawPianoRoll(ctx, props.files, meta, config)
 }
 
 function scheduleRender() {
@@ -141,6 +143,7 @@ function scheduleRender() {
 watch(() => props.files, scheduleRender, { deep: true })
 watch(() => props.timeRange, scheduleRender)
 watch(() => props.scrollOffset, scheduleRender)
+watch(() => props.selectedFileName, scheduleRender)
 
 onMounted(() => {
   if (containerRef.value) {

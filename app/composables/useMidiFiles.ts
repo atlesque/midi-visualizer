@@ -2,9 +2,9 @@
  * Application service: manages loaded MIDI files.
  * Orchestrates parsing, state, and track visibility.
  */
-import { ref, computed } from 'vue'
-import type { MidiFileEntry } from '~/composables/domain/types'
+import { computed, ref } from 'vue'
 import type { MidiParserPort } from '~/composables/domain/midi-parser'
+import type { MidiFileEntry } from '~/composables/domain/types'
 
 /** Singleton reactive state */
 const files = ref<MidiFileEntry[]>([])
@@ -56,7 +56,7 @@ export function useMidiFiles(parser?: MidiParserPort) {
   }
 
   function selectFile(index: number) {
-    selectedIndex.value = index
+    selectedIndex.value = selectedIndex.value === index ? null : index
   }
 
   return {

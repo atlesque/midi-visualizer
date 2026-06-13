@@ -9,21 +9,10 @@
           @remove="midiFiles.removeFile"
           @toggle="midiFiles.toggleVisibility"
           @clear="midiFiles.clearAll"
+          @files="handleFiles"
         />
         <div class="app-layout__main">
           <div class="app-layout__top-bar">
-            <button class="app-layout__upload-btn" @click="openFilePicker">
-              <UIcon name="i-lucide-upload" class="size-4" />
-              <span>Upload</span>
-            </button>
-            <input
-              ref="fileInputRef"
-              type="file"
-              accept=".mid,.midi"
-              multiple
-              class="app-layout__file-input"
-              @change="onFileInputChange"
-            />
             <div class="app-layout__view-toggle">
               <UTooltip text="Track view">
                 <UButton
@@ -58,6 +47,7 @@
             :has-files="true"
             :time-range="timeRange"
             :scroll-offset="scrollOffset"
+            :selected-file-name="midiFiles.selectedFile.value?.name ?? null"
             @files="handleFiles"
           />
           <PlaybackBar
@@ -90,21 +80,6 @@ const timeRange = ref(30)
 const scrollOffset = ref(0)
 const hasFiles = ref(false)
 const viewMode = ref<'tracks' | 'piano'>('piano')
-const fileInputRef = ref<HTMLInputElement | null>(null)
-
-function openFilePicker() {
-  fileInputRef.value?.click()
-}
-
-function onFileInputChange(e: Event) {
-  const input = e.target as HTMLInputElement
-  const files = input.files
-  if (files && files.length > 0) {
-    handleFiles(Array.from(files))
-    input.value = '' // reset so the same file can be re-selected
-  }
-}
-
 watch(midiFiles.fileCount, (count) => {
   hasFiles.value = count > 0
 })
@@ -157,32 +132,6 @@ function togglePlay() {
 
 .app-layout__empty {
   flex: 1;
-}
-
-.app-layout__upload-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-
-.app-layout__upload-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.8);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.app-layout__file-input {
-  display: none;
 }
 
 .app-layout__top-bar {
