@@ -10,6 +10,11 @@
         @clear="midiFiles.clearAll"
       />
       <div class="app-layout__main">
+        <DropZone
+          :has-files="true"
+          class="app-layout__drop-bar"
+          @files="handleFiles"
+        />
         <VizCanvas
           :files="midiFiles.visibleFiles.value"
           :has-files="true"
@@ -81,5 +86,11 @@ function togglePlay() {
 
 .app-layout__empty {
   flex: 1;
+}
+
+.app-layout__drop-bar {
+  flex-shrink: 0;
+  margin: 0;
+  min-height: 48px;
 }
 </style>
