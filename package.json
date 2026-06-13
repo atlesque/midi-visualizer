@@ -12,15 +12,17 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@vueuse/core": "^14.3.0",
     "nuxt": "^4.4.8",
-    "vue": "latest",
-    "vue-router": "latest",
     "tone": "^15.5.13",
-    "@vueuse/core": "^14.3.0"
+    "vue": "latest",
+    "vue-router": "latest"
   },
   "devDependencies": {
-    "tailwindcss": "^4.3.1",
     "@tailwindcss/vite": "^4.3.1",
-    "typescript": "~5.7.0"
-  }
+    "tailwindcss": "^4.3.1",
+    "typescript": "~5.7.0",
+    "vue-tsc": "^3.3.4"
+  },
+  "packageManager": "pnpm@11.6.0+sha256.a0162949d1ab19e12e8b3cd9f0f59ef02d7be74a28b806cf7f49fb7f4c07e5ce"
 }
