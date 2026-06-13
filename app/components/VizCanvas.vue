@@ -36,6 +36,7 @@ import { useVisualization } from '~/composables/useVisualization';
 const props = defineProps<{
   files: MidiFileEntry[]
   hasFiles: boolean
+  timeRange?: number
 }>()
 
 const emit = defineEmits<{
@@ -43,10 +44,17 @@ const emit = defineEmits<{
 }>()
 
 const containerRef = ref<HTMLDivElement | null>(null)
-const { canvasRef, render } = useVisualization()
+const { canvasRef, timeRange: vizTimeRange, render } = useVisualization()
 const isDraggingOver = ref(false)
 let resizeObserver: ResizeObserver | null = null
 let dragCounter = 0
+
+// Sync external timeRange prop into visualization composable
+watch(() => props.timeRange, (val) => {
+  if (val !== undefined) {
+    vizTimeRange.value = val
+  }
+}, { immediate: true })
 
 function onDragEnter() {
   dragCounter++

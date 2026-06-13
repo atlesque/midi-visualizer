@@ -19,6 +19,7 @@
           <VizCanvas
             :files="midiFiles.visibleFiles.value"
             :has-files="true"
+            :time-range="timeRange"
             @files="handleFiles"
           />
           <PlaybackBar
@@ -63,6 +64,21 @@ async function handleFiles(files: File[]) {
   for (const file of midiFiles_) {
     const buffer = await file.arrayBuffer()
     await midiFiles.addFile(file.name, buffer)
+  }
+
+  // Autozoom: fit the entire MIDI duration to the canvas width
+  autoZoomToFit()
+}
+
+/** Set timeRange to the max duration across all loaded files */
+function autoZoomToFit() {
+  if (midiFiles.files.value.length === 0) return
+  const maxDuration = Math.max(
+    ...midiFiles.files.value.map(f => f.data.meta.duration),
+  )
+  if (maxDuration > 0) {
+    timeRange.value = Math.ceil(maxDuration)
+    scrollOffset.value = 0
   }
 }
 
