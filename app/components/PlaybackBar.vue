@@ -10,18 +10,29 @@
         class="playback-bar__slider"
         @update:model-value="$emit('update:timeRange', $event as number)"
       />
+      <UTooltip text="Zoom to fit">
+        <UButton
+          icon="i-lucide-maximize"
+          size="xs"
+          color="neutral"
+          variant="ghost"
+          class="playback-bar__fit-btn"
+          @click="$emit('zoomToFit')"
+        />
+      </UTooltip>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 defineProps<{
-  timeRange: number
-}>()
+  timeRange: number;
+}>();
 
 defineEmits<{
-  'update:timeRange': [value: number]
-}>()
+  "update:timeRange": [value: number];
+  zoomToFit: [];
+}>();
 </script>
 
 <style scoped>

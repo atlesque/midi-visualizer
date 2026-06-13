@@ -42,6 +42,7 @@
           <PlaybackBar
             :time-range="timeRange"
             @update:time-range="timeRange = $event"
+            @zoom-to-fit="autoZoomToFit"
           />
         </div>
       </template>
