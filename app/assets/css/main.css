@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #0f0f11;
+  --color-surface-alt: #1a1a1e;
+  --color-surface-hover: #25252b;
+  --color-accent: #6c5ce7;
+  --color-accent-soft: #a29bfe;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#__nuxt {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: #e1e1e6;
+  font-family: 'Inter', 'SF Pro', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
